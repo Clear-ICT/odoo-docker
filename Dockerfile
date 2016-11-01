@@ -1,5 +1,5 @@
-FROM ubuntu:14.04
-MAINTAINER Elico Corp <contact@elico-corp.com>
+FROM ubuntu:16.04
+MAINTAINER Sucros Clear Information Technologies PLC<contact@clearict.com>
 
 # generate locales
 RUN locale-gen en_US.UTF-8 && update-locale
@@ -10,16 +10,16 @@ RUN echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 
 # Add PostgreSQL's repository. It contains the most recent stable release
-#     of PostgreSQL, ``9.4``.
+#     of PostgreSQL, ``9.6``.
 # install dependencies as distrib packages when system bindings are required
 # some of them extend the basic odoo requirements for a better "apps" compatibility
 # most dependencies are distributed as wheel packages at the next step
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
   apt-get update && \
   apt-get -yq install \
     adduser \
     ghostscript \
-    postgresql-client-9.4 \
+    postgresql-client-9.6 \
     python \
     python-pip \
     python-imaging \
@@ -41,7 +41,14 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
     # This library is necessary to upgrade PIL/pillow module
     libjpeg8-dev \
     # Git is required to clone Odoo OCB project
-    git
+    git \
+    # Required by our version of Odoo
+    libfreetype6-dev \
+    libpng12-dev \
+    libcups2-dev \
+    python-numpy \
+    python-numpy-dev \
+    libffi-dev
 
 # Install Odoo python dependencies
 ADD sources/pip-req.txt /opt/sources/pip-req.txt
